@@ -1,6 +1,9 @@
 # mdp binary
 mdp
 
+# goreleaser
+dist/
+
 # Binaries for programs and plugins
 *.exe
 *.exe~
