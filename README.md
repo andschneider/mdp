@@ -1,5 +1,8 @@
 # mdp
 
+![Build](https://github.com/andschneider/mdp/workflows/Build/badge.svg)
+[![Go Report Card](https://goreportcard.com/badge/github.com/andschneider/mdp)](https://goreportcard.com/report/github.com/andschneider/mdp)
+
 A simple CLI that will preview a markdown file in a browser.
 
 ## Installation
