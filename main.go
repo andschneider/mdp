@@ -13,6 +13,7 @@ import (
 
 	"github.com/yuin/goldmark"
 	highlighting "github.com/yuin/goldmark-highlighting"
+	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/renderer/html"
 )
 
@@ -38,7 +39,7 @@ type content struct {
 
 func main() {
 	filename := flag.String("file", "", "Markdown file to preview")
-	skipPreview := flag.Bool("skip", false, "Skip auto-preview")
+	skipPreview := flag.Bool("skip", false, "Skip auto-preview and prevent auto-delete of html file.")
 	flag.Parse()
 
 	if *filename == "" {
@@ -58,7 +59,7 @@ func run(filename string, out io.Writer, skipPreview bool) error {
 		return err
 	}
 
-	htmlData, err := parseContent(input)
+	htmlData, err := parseContent(input, filename)
 	if err != nil {
 		return err
 	}
@@ -86,17 +87,18 @@ func run(filename string, out io.Writer, skipPreview bool) error {
 	return preview(outName)
 }
 
-func parseContent(source []byte) ([]byte, error) {
+func parseContent(source []byte, filename string) ([]byte, error) {
 	// Convert markdown to HTML
+	var con bytes.Buffer
 	md := goldmark.New(
 		goldmark.WithExtensions(
 			highlighting.Highlighting,
+			extension.Table,
 		),
 		goldmark.WithRendererOptions(
 			html.WithHardWraps(),
 			html.WithXHTML(),
 		))
-	var con bytes.Buffer
 	if err := md.Convert(source, &con); err != nil {
 		return nil, err
 	}
@@ -109,7 +111,7 @@ func parseContent(source []byte) ([]byte, error) {
 
 	// Add markdown to template
 	c := content{
-		Title: "Markdown Preview Tool",
+		Title: filename,
 		Body:  template.HTML(con.String()),
 	}
 	var buf bytes.Buffer
