@@ -13,6 +13,7 @@ import (
 
 	"github.com/yuin/goldmark"
 	highlighting "github.com/yuin/goldmark-highlighting"
+	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/renderer/html"
 )
 
@@ -38,7 +39,7 @@ type content struct {
 
 func main() {
 	filename := flag.String("file", "", "Markdown file to preview")
-	skipPreview := flag.Bool("skip", false, "Skip auto-preview")
+	skipPreview := flag.Bool("skip", false, "Skip auto-preview and prevent auto-delete of html file.")
 	flag.Parse()
 
 	if *filename == "" {
@@ -88,15 +89,16 @@ func run(filename string, out io.Writer, skipPreview bool) error {
 
 func parseContent(source []byte) ([]byte, error) {
 	// Convert markdown to HTML
+	var con bytes.Buffer
 	md := goldmark.New(
 		goldmark.WithExtensions(
 			highlighting.Highlighting,
+			extension.Table,
 		),
 		goldmark.WithRendererOptions(
 			html.WithHardWraps(),
 			html.WithXHTML(),
 		))
-	var con bytes.Buffer
 	if err := md.Convert(source, &con); err != nil {
 		return nil, err
 	}
