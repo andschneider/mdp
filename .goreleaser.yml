@@ -9,6 +9,7 @@ builds:
   goos:
     - darwin
     - linux
+    - windows
   goarch:
     - amd64
     - arm
@@ -20,6 +21,7 @@ archives:
 - replacements:
     linux: Linux
     amd64: x86_64
+    darwin: macOS
 checksum:
   name_template: 'checksums.txt'
 snapshot:

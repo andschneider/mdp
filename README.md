@@ -2,9 +2,15 @@
 
 A simple CLI that will preview a markdown file in a browser.
 
-## Instalation 
+## Installation
 
-WIP 
+There are binaries for Linux, Mac, and Windows in the [releases page](https://github.com/andschneider/mdp/releases).
+
+Or use `go get`:
+
+```bash
+go get github.com/andschneider/mdp
+```
 
 ## Usage
 
@@ -14,7 +20,7 @@ WIP
 mdp -file README.md
 ```
 
-- To skip the autopreview use the `-skip` flag.
+- To skip the autopreview use the `-skip` flag. This also doesn't remove the generated .html file if you'd like to save or view it later.
 
 - Use `-help` flag to display the full usage information.
 
@@ -23,7 +29,7 @@ Usage of mdp:
   -file string
     	Markdown file to preview
   -skip
-    	Skip auto-preview
+    	Skip auto-preview and prevent auto-delete of html file.
 ```
 
 ### inspiration

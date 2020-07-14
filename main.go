@@ -59,7 +59,7 @@ func run(filename string, out io.Writer, skipPreview bool) error {
 		return err
 	}
 
-	htmlData, err := parseContent(input)
+	htmlData, err := parseContent(input, filename)
 	if err != nil {
 		return err
 	}
@@ -87,7 +87,7 @@ func run(filename string, out io.Writer, skipPreview bool) error {
 	return preview(outName)
 }
 
-func parseContent(source []byte) ([]byte, error) {
+func parseContent(source []byte, filename string) ([]byte, error) {
 	// Convert markdown to HTML
 	var con bytes.Buffer
 	md := goldmark.New(
@@ -111,7 +111,7 @@ func parseContent(source []byte) ([]byte, error) {
 
 	// Add markdown to template
 	c := content{
-		Title: "Markdown Preview Tool",
+		Title: filename,
 		Body:  template.HTML(con.String()),
 	}
 	var buf bytes.Buffer
