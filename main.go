@@ -31,6 +31,8 @@ const (
 `
 )
 
+var Version = "0.3.0"
+
 // content type represents the HTML content to add into the template
 type content struct {
 	Title string
@@ -38,13 +40,23 @@ type content struct {
 }
 
 func main() {
-	filename := flag.String("file", "", "Markdown file to preview")
+	flag.Usage = func() {
+		fmt.Fprintf(flag.CommandLine.Output(), "mdp - preview markdown in your browser.\n\n")
+		fmt.Fprintln(flag.CommandLine.Output(), "Usage information:")
+		flag.PrintDefaults()
+	}
+	filename := flag.String("file", "", "Markdown file to preview.")
 	skipPreview := flag.Bool("skip", false, "Skip auto-preview and prevent auto-delete of html file.")
+	version := flag.Bool("version", false, "Print version and exit.")
 	flag.Parse()
 
+	if *version {
+		fmt.Printf("mdp: v%s\n", Version)
+		os.Exit(0)
+	}
 	if *filename == "" {
 		flag.Usage()
-		os.Exit(1)
+		os.Exit(0)
 	}
 	if err := run(*filename, os.Stdout, *skipPreview); err != nil {
 		fmt.Fprintln(os.Stderr, err)

@@ -28,11 +28,15 @@ mdp -file README.md
 - Use `-help` flag to display the full usage information.
 
 ```bash
-Usage of mdp:
+mdp - preview markdown in your browser.
+
+Usage information:
   -file string
-    	Markdown file to preview
+    	Markdown file to preview.
   -skip
     	Skip auto-preview and prevent auto-delete of html file.
+  -version
+    	Print version and exit.
 ```
 
 ### inspiration
