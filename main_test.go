@@ -39,7 +39,7 @@ func TestParseContent(t *testing.T) {
 
 func TestRun(t *testing.T) {
 	var mockStdOut bytes.Buffer
-	if err := run(inputFile, &mockStdOut, true); err != nil {
+	if err := run(inputFile, &mockStdOut, true, "chrome"); err != nil {
 		t.Fatal(err)
 	}
 	resultFile := strings.TrimSpace(mockStdOut.String())

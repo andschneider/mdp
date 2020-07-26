@@ -31,6 +31,11 @@ const (
 `
 )
 
+var browsers = map[string]string{
+	"chrome":  "google-chrome",
+	"firefox": "firefox",
+}
+
 var Version = "0.3.0"
 
 // content type represents the HTML content to add into the template
@@ -47,6 +52,7 @@ func main() {
 	}
 	filename := flag.String("file", "", "Markdown file to preview.")
 	skipPreview := flag.Bool("skip", false, "Skip auto-preview and prevent auto-delete of html file.")
+	browser := flag.String("browser", "chrome", "Which browser to use. Default is Chrome. Options are chrome and firefox.")
 	version := flag.Bool("version", false, "Print version and exit.")
 	flag.Parse()
 
@@ -58,13 +64,18 @@ func main() {
 		flag.Usage()
 		os.Exit(0)
 	}
-	if err := run(*filename, os.Stdout, *skipPreview); err != nil {
+	if _, ok := browsers[*browser]; !ok {
+		fmt.Println(*browser)
+		fmt.Println("browser must be 'chrome' or 'firefox'.")
+		os.Exit(1)
+	}
+	if err := run(*filename, os.Stdout, *skipPreview, *browser); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 }
 
-func run(filename string, out io.Writer, skipPreview bool) error {
+func run(filename string, out io.Writer, skipPreview bool, browser string) error {
 	// Read all the data from the input file and check for errors
 	input, err := ioutil.ReadFile(filename)
 	if err != nil {
@@ -96,7 +107,7 @@ func run(filename string, out io.Writer, skipPreview bool) error {
 	}
 
 	defer os.Remove(outName)
-	return preview(outName)
+	return preview(outName, browser)
 }
 
 func parseContent(source []byte, filename string) ([]byte, error) {
@@ -133,10 +144,12 @@ func parseContent(source []byte, filename string) ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func preview(fname string) error {
+func preview(fname string, browser string) error {
 	// Locate Chrome in the PATH
-	// browserPath, err := exec.LookPath("firefox")
-	browserPath, err := exec.LookPath("google-chrome")
+	if browser == "chrome" {
+		browser = "google-chrome"
+	}
+	browserPath, err := exec.LookPath(browser)
 	if err != nil {
 		return err
 	}
